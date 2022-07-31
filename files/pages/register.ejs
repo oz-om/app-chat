@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include("./basics/header") %>
+</head>
+<body>
+  
+<div class="main">
+  <div class="container">
+    <div class="content">
+      <div class="logo">
+        <h1><span>O</span>m<span>C</span>hat</h1>
+      </div>
+      <div class="login">
+        <div class="cover">
+          <div class="shapes">
+            <span class="triangle"></span>
+            <span class="triangle"></span>
+            <span class="triangle"></span>
+            <span class="circle"></span>
+            <span class="circle"></span>
+          </div>
+          <div class="content">
+            <div>
+              <div class="head">
+                <h2>Hello, Friend!</h2>
+                <p>With OmChat, you'll get fast, simple, secure messaging and calling for free, available on phones all over the world.</p>
+                <p>login if already you're a member</p>
+              </div>
+              <div class="logIn">
+                <a href="/login">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="shape">
+            <svg id="10015.io" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+              <path fill="#0dca92" d="M333.5,252.5Q317,265,373.5,321.5Q430,378,359,342Q288,306,286,341Q284,376,262,357.5Q240,339,209.5,384Q179,429,169.5,390Q160,351,169,318Q178,285,116,293Q54,301,33,270.5Q12,240,75,223.5Q138,207,123,175.5Q108,144,126.5,126.5Q145,109,180,136.5Q215,164,227.5,136.5Q240,109,250.5,141.5Q261,174,290,153Q319,132,360.5,127Q402,122,426,147Q450,172,400,206Q350,240,333.5,252.5Z" />
+            </svg>
+          </div>
+          <div class="head">
+            <h2>sing up using flowing option</h2>
+            <ul class="otherSingup">
+              <li><a href="#"><i class='bx bxl-facebook'></i></a></i></li>
+              <li><a href="#"><i class='bx bxl-linkedin' ></i></a></li>
+              <li><a href="#"><ion-icon name="logo-google"></ion-icon></a></li>
+            </ul>
+            <p>or create a new account</p>
+          </div>
+          <div class="form">
+            <% if (error) { %>
+              <div class="error">
+                <p><%= errorMsg %></p>
+              </div>
+            <% } %>
+            <form action="/register" method="POST">
+              <div class="fname">
+                <input type="text" name="fname">
+                <label for="name">first name</label>
+              </div>
+              <div class="lname">
+                <input type="text" name="lname">
+                <label for="lname">last name</label>
+              </div>
+              <div class="username">
+                <input type="text" name="username">
+                <label for="username">username</label>
+              </div>
+              <div class="email">
+                <input type="text" name="email">
+                <label for="email">Email</label>
+              </div>
+              <div class="pass">
+                <input type="password" name="password">
+                <label for="pass">Password</label>
+              </div>
+              <button class="notReady">Sing up</button>
+            </form>
+            <div class="haveAccount">
+              <p>already have an account <a href="/login">login?</a></p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

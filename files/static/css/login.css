@@ -1,0 +1,392 @@
+.main .content {
+  background-color: #fff;
+}
+.main .content .logo {
+  padding: 20px;
+}
+.main .content .logo h1 {
+  color: #003b2a;
+}
+.main .content .logo h1 span {
+  color: #0dca92;
+}
+.main .content .login {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: minmax(500px, 1fr) 1fr;
+  grid-template-columns: minmax(500px, 1fr) 1fr;
+  height: calc(100vh - 83.2px);
+}
+.main .content .login .content {
+  position: relative;
+  overflow: hidden;
+}
+.main .content .login .content .shape svg {
+  position: absolute;
+  left: 75%;
+  bottom: -18%;
+  width: 300px;
+}
+.main .content .login .content .head h2 {
+  color: #0dca92;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  font-weight: 800;
+  font-size: 2.2em;
+  margin-bottom: 25px;
+}
+.main .content .login .content .head h2::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 5px;
+  border-radius: 10px;
+  background-color: #0dca92;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+.main .content .login .content .head .otherLogin {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.main .content .login .content .head .otherLogin li {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  -webkit-box-shadow: inset 0px 0px 7px 0px #00000029;
+          box-shadow: inset 0px 0px 7px 0px #00000029;
+  margin: 0 10px;
+}
+.main .content .login .content .head .otherLogin li a {
+  color: #00291d;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.main .content .login .content .head .otherLogin li i {
+  font-size: 28px;
+}
+.main .content .login .content .head .otherLogin li ion-icon {
+  font-size: 25px;
+}
+.main .content .login .content .head p {
+  text-align: center;
+  padding: 30px 0;
+  color: #a6a6a6;
+  font-weight: 600;
+}
+.main .content .login .content .form .error {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #e7007b;
+  font-weight: 600;
+}
+.main .content .login .content .form form > div:not(:last-of-type) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-width: 360px;
+  margin: 0 auto 30px;
+  position: relative;
+}
+.main .content .login .content .form form > div:not(:last-of-type) > input {
+  border: none;
+  outline: none;
+  padding: 20px;
+  border-radius: 7px;
+  -webkit-box-shadow: 0 0 1px 1px #0000003b;
+          box-shadow: 0 0 1px 1px #0000003b;
+  background-color: transparent;
+  z-index: 2;
+}
+.main .content .login .content .form form > div:not(:last-of-type) > input:focus {
+  -webkit-box-shadow: 0 0 1px 1px #0dca92;
+          box-shadow: 0 0 1px 1px #0dca92;
+}
+.main .content .login .content .form form > div:not(:last-of-type) > input:focus + label {
+  top: -1px;
+  background-color: #fff;
+  z-index: 3;
+  padding: 0 5px;
+}
+.main .content .login .content .form form > div:not(:last-of-type) > label {
+  color: #a6a6a6;
+  font-weight: 600;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  left: 20px;
+  -webkit-transition: top 0.1s linear;
+  transition: top 0.1s linear;
+  z-index: 1;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .notValid {
+  -webkit-box-shadow: 0 0 1px 1px #df0a63;
+          box-shadow: 0 0 1px 1px #df0a63;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .notValid:focus {
+  -webkit-box-shadow: 0 0 1px 1px #df0a63;
+          box-shadow: 0 0 1px 1px #df0a63;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .notValid + label {
+  top: -1px;
+  background-color: #fff;
+  color: #df0a63;
+  z-index: 3;
+  padding: 0 5px;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .valid {
+  -webkit-box-shadow: 0 0 1px 1px #0dca92;
+          box-shadow: 0 0 1px 1px #0dca92;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .valid:focus {
+  -webkit-box-shadow: 0 0 1px 1px #0dca92;
+          box-shadow: 0 0 1px 1px #0dca92;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .valid + label {
+  top: -1px;
+  background-color: #fff;
+  color: #0dca92;
+  z-index: 3;
+  padding: 0 5px;
+}
+.main .content .login .content .form form > div:not(:last-of-type) .full {
+  top: -1px;
+}
+.main .content .login .content .form form .options {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding: 10px 0 40px;
+}
+.main .content .login .content .form form .options .remember {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  place-items: center;
+  gap: 10px;
+}
+.main .content .login .content .form form .options .remember input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  background-color: #fff;
+  font: inherit;
+  color: #00291d;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid currentColor;
+  border-radius: 5px;
+  -webkit-transform: translateY(-0.075em);
+          transform: translateY(-0.075em);
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+}
+.main .content .login .content .form form .options .remember input::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  -webkit-clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+          clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  -webkit-transform-origin: bottom left;
+          transform-origin: bottom left;
+  -webkit-transition: 120ms -webkit-transform ease-in-out;
+  transition: 120ms -webkit-transform ease-in-out;
+  transition: 120ms transform ease-in-out;
+  transition: 120ms transform ease-in-out, 120ms -webkit-transform ease-in-out;
+  -webkit-box-shadow: inset 1em 1em var(--form-control-color);
+          box-shadow: inset 1em 1em var(--form-control-color);
+  background-color: #0dca92;
+}
+.main .content .login .content .form form .options .remember input:checked {
+  border-color: #0dca92;
+}
+.main .content .login .content .form form .options .remember input:checked::before {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+.main .content .login .content .form form .options .remember label {
+  color: #00291d;
+  font-weight: 700;
+}
+.main .content .login .content .form form .options .forget a {
+  color: #00291d;
+}
+.main .content .login .content .form form button {
+  padding: 15px 40px;
+  background-color: #0dca92;
+  color: #fff;
+  font-size: larger;
+  font-weight: 800;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  width: 180px;
+  position: relative;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+.main .content .login .content .form form button:hover {
+  background-color: #0b9d72;
+}
+.main .content .login .content .form form .notReady {
+  background-color: #71a495;
+  pointer-events: none;
+}
+.main .content .login .content .form .newUser {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  display: none;
+}
+.main .content .login .content .form .newUser p {
+  color: #014833;
+  font-weight: 600;
+}
+.main .content .login .content .form .newUser p a {
+  color: #0b9d72;
+}
+.main .content .login .cover {
+  position: relative;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+.main .content .login .cover .shapes {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(179deg, #36e6b1, #00ce67);
+  position: absolute;
+  overflow: hidden;
+}
+.main .content .login .cover .shapes .triangle {
+  -webkit-clip-path: polygon(100% 0, 0 50%, 100% 100%);
+          clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  background-color: #00976a4f;
+  display: block;
+  position: absolute;
+}
+.main .content .login .cover .shapes :nth-child(1) {
+  width: 50px;
+  height: 70px;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.main .content .login .cover .shapes :nth-child(2) {
+  width: 100px;
+  height: 130px;
+  top: 13%;
+  right: 10%;
+  -webkit-transform: rotate(313deg);
+          transform: rotate(313deg);
+}
+.main .content .login .cover .shapes :nth-child(3) {
+  width: 40px;
+  height: 40px;
+  bottom: 10%;
+  left: 20%;
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+.main .content .login .cover .shapes .circle {
+  background-color: #00976a4f;
+  display: block;
+  position: absolute;
+}
+.main .content .login .cover .shapes :nth-child(4) {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  top: 60%;
+  right: -20px;
+}
+.main .content .login .cover .shapes :nth-child(5) {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  top: 80%;
+  right: 30%;
+}
+.main .content .login .cover .content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+.main .content .login .cover .content div .head p,
+.main .content .login .cover .content div .head h2 {
+  color: #fff;
+  padding: 15px;
+}
+.main .content .login .cover .content div .head h2:after {
+  background-color: #fff;
+}
+.main .content .login .cover .content div .singUp {
+  padding-top: 30px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+.main .content .login .cover .content div .singUp a {
+  color: #fff;
+  border: 1px solid;
+  padding: 15px 40px;
+  border-radius: 25px;
+  font-weight: 800;
+  width: 150px;
+  margin: 30px auto;
+  cursor: pointer;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+}
+.main .content .login .cover .content div .singUp a:hover {
+  background-color: white;
+  color: #0dca92;
+}
+
+@media (max-width: 860px) {
+  .login {
+    display: inherit !important;
+  }
+  .login .form form button {
+    margin-bottom: 0 !important;
+  }
+  .login .form .newUser {
+    display: block !important;
+  }
+  .login .cover {
+    display: none;
+  }
+}
+@media (min-width: 860px) {
+  .login .content .shape {
+    display: none;
+  }
+}

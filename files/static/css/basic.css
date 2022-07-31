@@ -1,0 +1,422 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: #f7f4ff;
+  position: relative;
+  height: 100vh;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.container {
+  width: max(300px, 90vw);
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.errorMessage {
+  position: absolute;
+  padding: 10px;
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+  background-color: #fff0f6;
+  border: 1px solid #ce095f;
+  border-radius: 10px;
+  left: 50%;
+  top: -200px;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  z-index: 1000;
+  -webkit-transition: top 0.5s cubic-bezier(0.42, 0, 0, 1.36);
+  transition: top 0.5s cubic-bezier(0.42, 0, 0, 1.36);
+}
+.errorMessage span {
+  color: #ce095f;
+  font-weight: 700;
+  font-size: 0.9em;
+}
+.errorMessage.active {
+  top: 0px;
+}
+
+nav {
+  background-color: #0dca92;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 2;
+}
+nav .menu {
+  padding: 0 10px;
+  display: none;
+  cursor: pointer;
+}
+nav .menu i {
+  font-size: 25px;
+}
+nav .user {
+  position: relative;
+  width: 44px;
+  margin-left: auto;
+}
+nav .user .notif {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  margin: 0 5px;
+}
+nav .user .notif i {
+  font-size: 25px;
+  color: #fff;
+}
+nav .user .red-ball {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ff559f;
+  top: 5px;
+  left: 8px;
+  display: none;
+}
+nav .user .notif-box {
+  position: absolute;
+  right: 0;
+  width: 300px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 5px;
+  -webkit-box-shadow: 1px 1px 20px 0px #00000026;
+          box-shadow: 1px 1px 20px 0px #00000026;
+  display: none;
+}
+nav .user .notif-box > span {
+  border-radius: 5px;
+  display: block;
+  width: 100%;
+  height: 23px;
+  padding: 0px 0;
+  text-align: center;
+  -webkit-box-shadow: inset 0px 0px 3px #0dca92;
+          box-shadow: inset 0px 0px 3px #0dca92;
+  background-color: #e9fffa;
+  font-size: 1em;
+  font-weight: 700;
+  color: #578074;
+  cursor: pointer;
+}
+nav .user .notif-box .notification {
+  max-height: 670px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+nav .user .notif-box .notification::-webkit-scrollbar {
+  display: none;
+}
+nav .user .notif-box .notification .empty {
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 600;
+}
+nav .user .notif-box .notif-content {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 50px 10px 1fr 10px 30px;
+  grid-template-columns: 50px 1fr 30px;
+  gap: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #d3f2ff;
+  border-radius: 5px;
+  margin: 2px 0;
+  padding: 1px 0 1px 4px;
+}
+nav .user .notif-box .notif-content .img {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+nav .user .notif-box .notif-content .details h4 a {
+  color: #00291d;
+}
+nav .user .notif-box .notif-content .details .time {
+  color: #6a6a6a;
+}
+nav .user .notif-box .notif-content .notif-option {
+  position: relative;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+nav .user .notif-box .notif-content .notif-option i {
+  font-weight: 800;
+  cursor: pointer;
+}
+nav .user .notif-box .notif-content .notif-option .opt {
+  position: absolute;
+  width: 130px;
+  background-color: #ffffff96;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  right: 20px;
+  padding: 5px;
+  top: -25px;
+  border-radius: 10px;
+  display: none;
+}
+nav .user .notif-box .notif-content .notif-option .opt span {
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #ce095f;
+  padding: 5px;
+  margin: 1px 0;
+  background-color: #fff9fc46;
+  cursor: pointer;
+}
+nav .user .notif-box .notif-content .notif-option .opt.active {
+  display: block;
+}
+nav .user .notif-box .opened {
+  background-color: #f6f6f6;
+}
+nav .user .activeNotif {
+  display: unset;
+}
+
+.bottomMenu {
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+}
+.bottomMenu .control {
+  display: none;
+}
+.bottomMenu .menu {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[3];
+  grid-template-columns: repeat(3, 1fr);
+}
+.bottomMenu .menu div {
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.bottomMenu .menu div lord-icon {
+  height: 50px;
+  width: 50px;
+}
+.bottomMenu .menu div a h4 {
+  display: none;
+}
+.bottomMenu .menu .active {
+  border: 1px solid #0dca92;
+  border-radius: 5px;
+}
+.bottomMenu .logOut {
+  display: none;
+}
+.bottomMenu .logOut a {
+  color: #00291d;
+}
+
+@media (min-width: 650px) {
+  nav .menu {
+    display: block;
+  }
+
+  .bottomMenu {
+    top: 0;
+    border-right: 1px solid #0dca92;
+    overflow: hidden;
+    width: 0;
+    -webkit-transition: width 0.1s linear;
+    transition: width 0.1s linear;
+  }
+  .bottomMenu .control {
+    display: block;
+  }
+  .bottomMenu .control .partOne {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  .bottomMenu .control .partOne h1 {
+    color: #00291d;
+  }
+  .bottomMenu .control .partOne h1 span {
+    text-transform: capitalize;
+    color: #0dca92;
+  }
+  .bottomMenu .control .partOne .hide {
+    cursor: pointer;
+    display: -ms-grid;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+  }
+  .bottomMenu .control .partOne .hide i {
+    font-size: 25px;
+    color: #0dca92;
+  }
+  .bottomMenu .control .partTwo {
+    display: -ms-grid;
+    display: grid;
+    width: 121px;
+    place-items: center;
+    margin: 20px auto;
+    background-color: #d5f6ec;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .bottomMenu .control .partTwo .userAva {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  .bottomMenu .control .partTwo h4 {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .bottomMenu .control .partTwo h4 a {
+    color: #00291d;
+  }
+  .bottomMenu .menu {
+    display: block;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    width: 100%;
+  }
+  .bottomMenu .menu div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 20px;
+  }
+  .bottomMenu .menu div a {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    color: #00291d;
+  }
+  .bottomMenu .menu div a h4 {
+    display: block;
+  }
+  .bottomMenu .active {
+    background-color: #16cd962e;
+  }
+  .bottomMenu .logOut {
+    position: absolute;
+    bottom: 10px;
+    display: block;
+  }
+  .bottomMenu .logOut span {
+    padding: 3px 10px;
+    display: inline-block;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #ce095f;
+    background-color: #eaeaea;
+    font-weight: 600;
+  }
+
+  .openMen {
+    width: 200px;
+    padding-left: 10px;
+    z-index: 2;
+  }
+}
+@media (min-width: 1200px) {
+  .bottomMenu {
+    width: 150px;
+  }
+  .bottomMenu .control .partOne .hide {
+    display: none;
+  }
+  .bottomMenu .control .partTwo {
+    -ms-grid-columns: unset;
+    grid-template-columns: unset;
+    place-items: center;
+    background-color: #d5f6ec;
+    width: 100px;
+    margin: 18px auto;
+    border-radius: 15px;
+    padding: unset;
+  }
+  .bottomMenu .control .partTwo .userAva {
+    width: 80px;
+    margin-top: 15px;
+  }
+  .bottomMenu .control .partTwo h4 {
+    font-size: 16px;
+    padding: 8px 0 20px;
+    font-weight: 600;
+  }
+  .bottomMenu .menu div {
+    gap: 5px;
+  }
+  .bottomMenu .logOut {
+    display: block;
+  }
+
+  .openMen {
+    display: block;
+  }
+}

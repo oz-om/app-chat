@@ -1,0 +1,43 @@
+<div class="bottomMenu">
+  <div class="control">
+    <div class="partOne">
+      <h1><span>o</span>m<span>c</span>hact</h1>
+      <div class="hide"><i class="bx bxs-x-square"></i></div>
+    </div>
+    <div class="partTwo">
+      <div class="userAva">
+        <img src="<%= my.imgProfile%>" alt="user" />
+      </div>
+      <h4><a href="/profile" id="<%= my._id %>" data-fullname="<%= my.fname%> <%= my.lname%>">
+          <%= my.username %>
+        </a></h4>
+    </div>
+  </div>
+  <div class="menu">
+    <div class="profile" onmouseenter="addEffect(this)" onmouseleave="removeEffect(this)">
+      <a href="/profile">
+        <lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"></lord-icon>
+        <h4>profile</h4>
+      </a>
+    </div>
+    <div class="messages" onmouseenter="addEffect(this)" onmouseleave="removeEffect(this)">
+      <a href="/">
+        <lord-icon src="https://cdn.lordicon.com/zpxybbhl.json"></lord-icon>
+        <h4>messages</h4>
+      </a>
+    </div>
+    <div class="setting" onmouseenter="addEffect(this)" onmouseleave="removeEffect(this)">
+      <a href="/">
+        <lord-icon src="https://cdn.lordicon.com/sbiheqdr.json"></lord-icon>
+        <h4>setting</h4>
+      </a>
+    </div>
+  </div>
+  <div class="logOut">
+    <span><a href="/logout">log out</a></span>
+  </div>
+</div>
+<script src="https://cdn.lordicon.com/lusqsztk.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client/socket-init.js"></script>
+<script src="/js/integrated.js"></script>

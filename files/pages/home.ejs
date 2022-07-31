@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include("./basics/header") %>
+</head>
+<body>
+  <%- include("./basics/nave") %>
+  <div class="main">
+    <div class="content">
+      <div class="controllers">
+        <h4 class="req">requests</h4>
+        <h4 class="fri active">friends</h4>
+      </div>
+      <div class="friends ">
+        <div class="reqFri hide">
+          <!-- start friend requisites -->
+          <% if (my.friReq.length > 0) { %>
+          <% for(let friendReq of friReq ) { %>
+          <div class="fri">
+            <div class="img-container">
+              <img src="<%= friendReq.fr.imgProfile %>" alt="ava">
+            </div>
+            <div class="info">
+              <h3><a href="/profile/<%=friendReq.fr._id%>"><%= friendReq.fr.fname+" "+friendReq.fr.lname%></a></h3>
+              <div class="controllers">
+                <span class="accept" onclick="accept(this)" data-id="<%=friendReq.fr._id%>" data-fullname="<%= friendReq.fr.fname+" "+friendReq.fr.lname%>" data-img="<%= friendReq.fr.imgProfile %>"><i class='bx bx-check'></i></span>
+                <span class="cancel" onclick="reject(this)" data-id="<%=friendReq.fr._id%>"><i class='bx bx-x'></i></span>
+              </div>
+            </div>
+          </div>
+          <% } %>
+          <% } else { %>
+            <div class="empty">
+              <img src="https://svgshare.com/i/i9c.svg" alt="empty">
+            </div>
+          <% } %>
+        </div>
+        <!-- end friend requests -->
+        <!-- start friends list -->
+        <div class="friendList">
+          <% if (my.friends.length > 0) { %>
+          <% for(let friend of friends) { %>
+          <div class="fri">
+            <div class="img-container">
+              <img src="<%= friend.fr.imgProfile %>" alt="ava">
+            </div>
+            <div class="info">
+              <div class="contact">
+                <h3><a href="/profile/<%=friend.fr._id%>"><%= friend.fr.fname+" "+friend.fr.lname %></a></h3>
+                <div class="send" id="<%= friend.fr._id %>" data-fullname="<%= friend.fr.fname+" "+friend.fr.lname %>" data-img="<%= friend.fr.imgProfile %>" data-chatid="<%= friend.chatId %>">
+                  <span class="chat" onclick="sendMsgFromFriendList(this)"><i class='bx bx-send'></i></span>
+                  <span class="call"><i class='bx bxs-phone-call'></i></span>
+                </div>
+              </div>
+              <div class="options">
+                <i class='bx bx-dots-vertical-rounded bx-rotate-180' onclick="optOnFriendList(this)"></i>
+                <div class="option">
+                  <span>unfollow</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+          <% } else { %>
+            <div class="empty">
+              <img src="https://svgshare.com/i/i9c.svg" alt="empty">
+            </div>
+          <% } %>
+        </div>
+        <!-- end friend list  -->
+      </div>
+    </div>
+    <!-- start mes -->
+    <div class="messages">
+      <div class="mesContainer">
+        <h3><span>C</span>hats</h3>
+        <div class="addCircle">
+          <i class='bx bxs-message-square-add bx-rotate-270' onclick="newConversation(this)"></i>
+          <div class="icon">
+          </div>
+        </div>
+        <div class="mes">
+          <% for (let fri of chat) { %>
+              <% if (`${fri.sender._id}` === `${my._id}`) { %>
+                <div class="friend" id="<%= fri.chatId%>">
+                  <div class="img-container" onclick="getMsg(this)">
+                    <img src="<%= fri.receiver.imgProfile %>" alt="ava">
+                  </div>
+                  <div class="info" onclick="getMsg(this)">
+                    <div class="contact">
+                      <h3 id="<%= fri.receiver._id %>"><%= fri.receiver.fname %> <%= fri.receiver.lname %></h3>
+                      <span class="lastMsg"><small>you: </small> <%= fri.content %></span>
+                    </div>
+                  </div>
+                  <div class="options">
+                    <i class='bx bx-dots-vertical-rounded bx-rotate-180' onclick="showMsgOpt(this)"></i>
+                    <div class="opt">
+                      <span>mark as unread</span>
+                      <span>view profile</span>
+                      <span>block</span>
+                    </div>
+                  </div>
+                </div>
+              <% } else { %>
+                <div class="friend <%= fri.status.split("_")[0] %>" id="<%= fri.chatId %>">
+                  <div class="img-container" onclick="getMsg(this)">
+                    <img src="<%= fri.sender.imgProfile %>" alt="ava">
+                  </div>
+                  <div class="info" onclick="getMsg(this)">
+                    <div class="contact">
+                      <h3 id="<%= fri.sender._id %>"><%= fri.sender.fname %> <%= fri.sender.lname %></h3>
+                      <span class="lastMsg"><%= fri.content %> <span class="count"><%= Number(fri.status.split("_")[1]) > 0 ? fri.status.split("_")[1] : ""%></span></span>
+                    </div>
+                  </div>
+                  <div class="options">
+                    <i class='bx bx-dots-vertical-rounded bx-rotate-180' onclick="showMsgOpt(this)"></i>
+                    <div class="opt">
+                      <span>mark as unread</span>
+                      <span>view profile</span>
+                      <span>block</span>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="chatContainer">
+        <div class="defaultView">
+          <lord-icon src="https://cdn.lordicon.com/kjkiqtxg.json" trigger="loop"
+            colors="outline:#16c72e,primary:#66d7ee,secondary:#30e849,tertiary:#d1faf0" style="width:250px;height:250px">
+          </lord-icon>
+          <p>to <span>keep</span> you near your <span>friends</span></p>
+        </div>
+        <div class="chat">
+          <div class="containerOfChat">
+            <section class="receiver">
+              <div class="details">
+                <div class="img">
+                  <img src="" alt="friend Img">
+                </div>
+                <div class="name">
+                  <h4 id=""></h4>
+                  <div class="status">
+                    <span>Online</span>
+                  </div>
+                </div>
+              </div>
+              <div class="options">
+                <div class="call">
+                  <i class='bx bxs-phone-call'></i>
+                  <i class='bx bxs-video'></i>
+                </div>
+                <div class="opt">
+                  <i class='bx bx-dots-vertical-rounded'></i>
+                  <div class="optList">
+                    <span>clear Chat</span>
+                    <span>block</span>
+                  </div>
+                </div>
+              </div>
+              <div class="closeMsg">
+                <i class='bx bx-chevrons-down'></i>
+              </div>
+            </section>
+            <section class="chatView">
+              <div class="chatContent">
+                <!-- <div class="msg msgLeft" data-sender="me">
+                  <p class="msgContent">hello Lor11111</p>
+                  <span class="time">12:00 AM</span>
+                </div> -->
+              </div>
+              <div class="chatControl">
+                <textarea name="msg" placeholder="message"></textarea>
+                <div class="sendBtn" onclick="sendMsg(this)">
+                  <i class='bx bx-send'></i>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end mes -->
+  </div>
+  <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+  <%- include("./basics/menu") %>
+  <div class="videoCallContainer">
+    <div class="closeVideo">
+      <i class='bx bx-exit-fullscreen'></i>
+    </div>
+    <div class="stream">
+      <video id="you" onclick="toggle(this)" class="main"></video>
+      <video id="me" onclick="toggle(this)" class="small" muted></video>
+    </div>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>
+

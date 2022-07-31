@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include("./basics/header") %>
+  </head>
+  <body>
+    <%- include("./basics/nave") %>
+    <div class="main">
+      <div class="profile">
+        <div class="ava">
+          <div class="back">
+            <img src="<%= user.back_wallpaper %>" alt="backAva">
+          </div>
+          <div class="userAva">
+            <img src="<%= user.imgProfile%>" alt="ava">
+            <% if (session == my._id) { %>
+              <i class='bx bx-camera change-img'></i>
+            <% } %>
+          </div>
+        </div>
+        <div class="details">
+          <div class="name">
+            <h4 id="<%= user._id %>" data-fullname="<%=user.fname%> <%=user.lname%>"><%= user.fname %>
+              <%= user.lname %></h4>
+            <div class="hash">
+              <span>#Official~Brand</span>
+            </div>
+          </div>
+          <div class="follow">
+            <div class="followings">
+              <lord-icon src="https://cdn.lordicon.com/wwbrugun.json" trigger="loop" colors="primary:#30c9e8" delay="3000"></lord-icon>
+              <p>743</p>
+              <span>followings</span>
+            </div>
+            <div class="followers">
+              <lord-icon src="https://cdn.lordicon.com/crrnydsb.json" trigger="loop" colors="primary:#0dca92" delay="3000"></lord-icon>
+              <p>223</p>
+              <span>followers</span>
+            </div>
+          </div>
+        </div>
+        <!-- start status -->
+        <% if (session != my._id) { %>
+        <div class="status">
+          <div class="msgBox" >
+            <div class="closeBox" onclick="closeBox(this)"><i class='bx bx-x'></i></div>
+            <textarea name="msg" placeholder="message"></textarea>
+            <div class="sendBtn" onclick="sendMsg(this)">
+              <i class='bx bx-send'></i>
+            </div>
+          </div>
+          <% if ( isFriend ) { %>
+          <div class="friends">
+            <div class="message" id="<%= chatId %>" onclick="message(this)">
+              <span><i class='bx bxs-message'></i> message</span>
+            </div>
+            <div class="unfollow">
+              <span><i class='bx bxs-minus-circle'></i> unfollow</span>
+            </div>
+            <div class="other">
+              <i class='bx bx-dots-vertical-rounded' onclick="friendsOption(this)"></i>
+              <div class="options">
+                <span onclick="unfriend(this)"><i class='bx bx-user-x'></i>unfriend</span>
+                <span><i class='bx bxs-minus-circle'></i>block</span>
+              </div>
+            </div>
+          </div>
+          <% } else if( reqReceived ) { %>
+          <div class="friend-req">
+            <div class="accept" onclick="acceptReq(this)">
+              <span><i class='bx bx-check'></i> approve</span>
+            </div>
+            <div class="reject" onclick="rejectReq(this)">
+              <span><i class='bx bx-x'></i> cancel</span>
+            </div>
+          </div>
+          <% } else if ( reqSent ) { %>
+          <div class="receiv-req">
+            <div class="req" onclick="cancelReq(this)">
+              <span><i class='bx bxs-minus-circle'></i>cancel request</span>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="default">
+            <div class="send-req" onclick="addFriend(this)">
+              <span><i class='bx bx-user-plus'></i> add friend</span>
+            </div>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+        <!--  end status  -->
+        <div class="about-fri">
+          <div class="about">
+            <h3>about</h3>
+            <div class="desc">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi architecto harum ea placeat iste saepe eligendi perspiciatis voluptas ducimus officiis.
+            </div>
+            <div class="info">
+              <h3>email: <span><%= user.email %></span></h3>
+              <h3>phone: <span>+212 630-123 9932</span></h3>
+            </div>
+            <% if (session == my._id) { %>
+            <div class="profLink">
+              <input type="text" readonly value="<%= url %>/profile/<%=user._id%>">
+              <span onclick="copyLink(this)">copy</span>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <% if (session == my._id) { %>
+          <section class="friendsList">
+            <div class="switch">
+              <div>
+                <h4 class="active" data-type="friend" onclick="toggleFriend(this)">friends</h4>
+              </div>
+              <div>
+                <h4 data-type="request" onclick="toggleFriend(this)">friend request</h4>
+              </div>
+            </div>
+            <div class="myFriends">
+              <h4>friends</h4>
+              <div class="search">
+                <input type="text" placeholder="search">
+                <i class='bx bx-search-alt'></i>
+              </div>
+              <div class="friList">
+                <% if (my.friends.length > 0) { %>
+                  <% for(let friend of friends) { %>
+                    <div class="fri">
+                      <div class="img">
+                        <img src="<%= friend.fr.imgProfile %>" alt="ava">
+                      </div>
+                      <div class="details">
+                        <h4><a href="/profile/<%=friend.fr._id%>"><%=friend.fr.fname +" "+friend.fr.lname%></a></h4>
+                      </div>
+                      <div class="options">
+                        <span onclick="unfriend(this)" id="<%=friend.fr._id%>">unfriend</span>
+                      </div>
+                    </div>
+                  <% } %>
+                <% } else { %>
+                  <div class="empty">
+                    <img src="https://svgshare.com/i/i9c.svg" alt="empty">
+                    <p>empty</p>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+            <div class="friendReq hide">
+              <h4>requests</h4>
+              <div class="reqList">
+                <% if (my.friReq.length> 0) { %>
+                  <% for(let req of friReq) { %>
+                    <div class="req">
+                      <div class="img">
+                        <img src="<%= req.fr.imgProfile %>" alt="ava">
+                      </div>
+                      <div class="details">
+                        <h4><a href="/profile/<%=req.fr._id%>"><%=req.fr.fname+" "+req.fr.lname%></a></h4>
+                      </div>
+                      <div class="actions">
+                        <div class="accept" id="<%=req.fr._id%>" data-img="<%= req.fr.imgProfile %>" data-fullname="<%=req.fr.fname+""+req.fr.lname%>" onclick="acceptReq(this)">
+                          <i class='bx bx-check'></i>
+                        </div>
+                        <div class="reject">
+                          <i class='bx bx-x'></i>
+                        </div>
+                      </div>
+                    </div>
+                  <% } %>
+                <% } else { %>
+                  <div class="empty">
+                    <img src="https://svgshare.com/i/i9c.svg" alt="empty">
+                    <p>empty</p>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          </section>
+        <% } %>
+      </div>
+    </div>
+    <%- include("./basics/menu") %>
+    <div class="change-images">
+      <form action="/update-images" method="POST" class="content" enctype="multipart/form-data">
+        <div class="close" id="close-change">
+          <i class='bx bx-exit-fullscreen'></i>
+        </div>
+        <div class="back">
+          <img id="back-img" src="<%= user.back_wallpaper %>" alt="back">
+          <div class="change-back">
+            <label for="back" class="custom-back-upload">
+              <i class='bx bx-upload'></i><span>change</span>
+            </label>
+            <input type="file" name="back" id="back" hidden accept="Image/*">
+          </div>
+        </div>
+        <div class="ava">
+          <img id="ava-img" src="<%= user.imgProfile%>" alt="ava">
+          <div class="change-ava">
+            <label for="ava" class="custom-ava-upload">
+              <i class='bx bx-upload'></i><span>change</span>
+            </label>
+            <input type="file" name="ava" id="ava" accept="Image/*" hidden>
+          </div>
+        </div>
+        <div class="save-changes" role="submit">
+          <input type="submit" value="Save Changes">
+        </div>
+      </form>
+    </div>
+    <script src="/js/profile.js"></script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<div class="errorMessage">
+  <span></span>
+</div>
+<nav>
+    <div class="menu">
+      <i class='bx bx-candles bx-rotate-90' ></i>
+    </div>
+    <div class="user">
+      <div class="notif">
+        <i class='bx bxs-bell'></i>
+        <div class="red-ball"></div>
+      </div>
+      <div class="notif-box">
+        <span class="makAllRead">make all as read</span>
+        <div class="notification">
+        <% if (notifications.length > 0) { %>
+          <% for(let notif of notifications) { %>
+            <div class="notif-content <%= notif.status%>" id="<%= notif.id %>">
+              <div class="img">
+                <img src="<%= notif.from.imgProfile%>" alt="friend_img">
+              </div>
+              <div class="details" onclick="openNotif(this)">
+                <h4><a href="/profile/<%= notif.from._id %>"><%= notif.from.fname %> <%= notif.from.lname %> <%= notif.text%></a></h4>
+                <div class="time">
+                  <% if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 * 7 * 30 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24 * 7 * 30)) %>m ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 * 7 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24 * 7 ) ) %> ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24  ) ) %>d ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 ) ) %>h ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 ) ) %>min ago
+                  <% } else { %>
+                    just now
+                  <% } %>
+                </div>
+              </div>
+              <div class="notif-option">
+                <i class='bx bx-dots-vertical-rounded' onclick="notifOpt(this)"></i>
+                <div class="opt">
+                  <span>make as unread</span>
+                  <span id="<%= notif.id%>" onclick="deleteNotif(this)">delete notification</span>
+                </div>
+              </div>
+            </div>
+          <% } %>
+          <% } else { %>
+            <div class="empty">
+              there is no notification
+            </div>
+        <% }%>
+        </div>
+      </div>
+    </div>
+  </nav>
