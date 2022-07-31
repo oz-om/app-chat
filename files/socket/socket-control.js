@@ -20,6 +20,9 @@ module.exports = (socket, client) => {
   client.on("reqPeerId", (data) => {
     client.join(data.chatId)
     socket.to(data.friendId).emit("needPeerId",{chatId: data.chatId});
+    client.on("disconnect", ()=> {
+      socket.to(data.chatId).emit("me-disconnected");
+    })
   });
   client.on("sendPeerId", (data) => {
     client.join(data.chatId)

@@ -569,7 +569,6 @@ let videoBox = document.querySelector(".videoCallContainer");
 let streamBox = document.querySelector(".stream");
 let you = document.getElementById("you");
 let me = document.getElementById("me");
-let connection = {}
 
 peer.on("open", (id) => {
   myPeerId = id;
@@ -602,17 +601,14 @@ server.on("takePeerId", id => {
       you.srcObject = userStream;
       you.play();
     });
-    connection[id] = call;
 
     server.on("user-disconnected", (userId) => {
-      connection[userId].close();
       videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
-        alert("close from call")
       });
     });
-
+    
   }).catch(err => {
     console.log(err)
   })
@@ -634,19 +630,18 @@ peer.on("call", (receiveCall) => {
       you.srcObject = userStream;
       you.addEventListener("loadedmetadata", ()=> {
         you.play();
-      })
+      });
     });
-
-    server.on("user-disconnected", (userId) => {
-      connection[userId].close();
+    
+    server.on("me-disconnected", () => {
       videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
-        alert("close from ansewoe")
       });
     });
   })
 });
+
 
 
 // function creatVideo(stream, style, id) {
