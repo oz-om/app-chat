@@ -569,6 +569,8 @@ let videoBox = document.querySelector(".videoCallContainer");
 let streamBox = document.querySelector(".stream");
 let you = document.getElementById("you");
 let me = document.getElementById("me");
+let closeCall;
+let peers = {};
 
 peer.on("open", (id) => {
   myPeerId = id;
@@ -585,7 +587,6 @@ server.on("needPeerId", (data) => {
   server.emit("sendPeerId", { myPeerId, chatId: data.chatId});
 });
 
-let closeCall;
 // start calling
 server.on("takePeerId", id => {
   navigator.mediaDevices.getUserMedia({
@@ -602,8 +603,9 @@ server.on("takePeerId", id => {
       you.srcObject = userStream;
       you.play();
     });
-
+    peers[id] = call;
     server.on("user-disconnected", () => {
+      peers[id].close();
       videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
