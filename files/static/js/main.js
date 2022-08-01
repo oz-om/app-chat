@@ -654,7 +654,6 @@ peer.on("call", (receiveCall) => {
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
-      
       server.emit("closeCall");
       videoBox.style.display = "none";
       
