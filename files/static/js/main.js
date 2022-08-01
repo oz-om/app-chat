@@ -611,12 +611,12 @@ server.on("takePeerId", id => {
     });
     
     closeCall = function () {
-      console.log("closeCall from btn")
-      server.emit("closeCall");
-      videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
+      server.emit("closeCall");
+      videoBox.style.display = "none";
+      
     }
 
   }).catch(err => {
@@ -651,12 +651,13 @@ peer.on("call", (receiveCall) => {
     });
 
     closeCall = function () {
-      console.log("closeCall from btn");
-      server.emit("closeCall");
-      videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
+      
+      server.emit("closeCall");
+      videoBox.style.display = "none";
+      
     };
     
   })
