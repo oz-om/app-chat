@@ -17,18 +17,28 @@ module.exports = (socket, client) => {
   client.on("sendMsg", (msg) => {
     socket.to(msg.msg.receiver).emit("receiveMsg", msg);
   });
+  //start call
   client.on("reqPeerId", (data) => {
     client.join(data.chatId)
     socket.to(data.friendId).emit("needPeerId",{chatId: data.chatId});
+
     client.on("disconnect", ()=> {
       socket.to(data.chatId).emit("me-disconnected");
-    })
+    });
+    client.on("closeCall", ()=> {
+      socket.to(data.chatId).emit("me-disconnected");
+    });
   });
+  // answer call
   client.on("sendPeerId", (data) => {
     client.join(data.chatId)
     socket.to(data.chatId).emit("takePeerId", data.myPeerId);
+
     client.on("disconnect", ()=> {
-      socket.to(data.chatId).emit("user-disconnected", data.myPeerId);
-    })
+      socket.to(data.chatId).emit("user-disconnected");
+    });
+    client.on("closeCall", () => {
+      socket.to(data.chatId).emit("user-disconnected");
+    });
   });
 };

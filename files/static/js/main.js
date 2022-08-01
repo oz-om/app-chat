@@ -585,7 +585,8 @@ server.on("needPeerId", (data) => {
   server.emit("sendPeerId", { myPeerId, chatId: data.chatId});
 });
 
-
+let closeCall;
+// start calling
 server.on("takePeerId", id => {
   navigator.mediaDevices.getUserMedia({
     audio:true, 
@@ -602,19 +603,28 @@ server.on("takePeerId", id => {
       you.play();
     });
 
-    server.on("user-disconnected", (userId) => {
+    server.on("user-disconnected", () => {
       videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
     });
     
+    closeCall = function () {
+      console.log("closeCall from btn")
+      server.emit("closeCall");
+      videoBox.style.display = "none";
+      stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
+
   }).catch(err => {
     console.log(err)
   })
 });
 
-
+// answer call
 peer.on("call", (receiveCall) => {
   navigator.mediaDevices.getUserMedia({
     audio: true,
@@ -632,13 +642,23 @@ peer.on("call", (receiveCall) => {
         you.play();
       });
     });
-    
+
     server.on("me-disconnected", () => {
       videoBox.style.display = "none";
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
     });
+
+    closeCall = function () {
+      console.log("closeCall from btn");
+      server.emit("closeCall");
+      videoBox.style.display = "none";
+      stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    };
+    
   })
 });
 
@@ -673,10 +693,5 @@ function toggle(ele) {
   }
 }
 
-// close video
-let closeVideo = document.querySelector(".closeVideo");
-closeVideo.onclick = function () {
-  videoBox.style.display = "none";
-}
 
 
