@@ -721,29 +721,38 @@
   overflow: hidden;
   display: none;
 }
-.videoCallContainer .closeVideo {
-  width: 30px;
-  height: 30px;
-  border-radius: 0.3em;
-  background-color: #ce095f;
-  color: #fff;
+.videoCallContainer .stream .videoStreamControls {
   position: absolute;
-  right: 0.1em;
-  top: 0.1em;
-  display: -ms-grid;
-  display: grid;
-  place-content: center;
+  bottom: 5em;
+  left: 5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 0.5em;
+     -moz-column-gap: 0.5em;
+          column-gap: 0.5em;
+  z-index: 2;
 }
-.videoCallContainer .closeVideo i {
+.videoCallContainer .stream .videoStreamControls i {
   font-size: 25px;
+  padding: 0.2em;
+  border-radius: 50%;
+  border: 2px solid #7ca1a4;
+  cursor: pointer;
 }
-.videoCallContainer #you {
+.videoCallContainer .stream .videoStreamControls .bxs-phone-off {
+  color: #ce095f;
+}
+.videoCallContainer .stream .videoStreamControls .bx-microphone-off {
+  color: #0db1ca;
+}
+.videoCallContainer .stream #you {
   border: 1px solid #0dca92;
 }
-.videoCallContainer #me {
+.videoCallContainer .stream #me {
   border: 1px solid #fff;
 }
-.videoCallContainer .main {
+.videoCallContainer .stream .main {
   position: absolute;
   width: 90%;
   height: 90%;
@@ -753,7 +762,7 @@
           transform: translate(4%, -50%);
   margin: 0;
 }
-.videoCallContainer .small {
+.videoCallContainer .stream .small {
   position: absolute;
   width: 12em;
   height: 40%;
@@ -762,9 +771,219 @@
   z-index: 2;
   cursor: pointer;
 }
-.videoCallContainer video {
+.videoCallContainer .stream video {
   -o-object-fit: cover;
      object-fit: cover;
+}
+.videoCallContainer .stream .audioView {
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+  display: none;
+}
+.videoCallContainer .stream .audioView .fri-details {
+  padding: 1em;
+  border-radius: 1em;
+  margin: 3em auto;
+  -webkit-box-shadow: 0 5px 10px 0 #0000003b;
+          box-shadow: 0 5px 10px 0 #0000003b;
+  width: 40vw;
+}
+.videoCallContainer .stream .audioView .fri-details .img {
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.videoCallContainer .stream .audioView .fri-details .name {
+  text-align: center;
+  padding: 1em 0 0;
+}
+.videoCallContainer .stream .audioView .fri-details .name p {
+  font-weight: 600;
+}
+.videoCallContainer .stream .audioView .audioEffect {
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+}
+.videoCallContainer .stream .audioView .audioControls {
+  padding: 1.5em 0;
+  border: 1px solid;
+  border-radius: 1.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+.videoCallContainer .stream .audioView .audioControls i {
+  border-radius: 50%;
+  font-size: 2em;
+  cursor: pointer;
+}
+.videoCallContainer .stream .audioView .audioControls #closeAudioCall {
+  color: #ce095f;
+}
+.videoCallContainer .stream .audioView .audioControls #muteAudio {
+  color: #22bdff;
+}
+.videoCallContainer .stream .audioView .audioControls #getChat {
+  color: #0dca92;
+}
+
+.startCallAlert {
+  position: fixed;
+  left: 50%;
+  top: 2px;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  z-index: 10;
+}
+.startCallAlert .content {
+  padding: 0.5em;
+  border-radius: 1em;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  background-color: #0db1ca3f;
+  -webkit-box-shadow: 0 4px 10px 0 #0000003b;
+          box-shadow: 0 4px 10px 0 #0000003b;
+  border: 1px solid #0000003b;
+  min-width: 200px;
+}
+.startCallAlert .content .user_img {
+  width: 2.5em;
+  height: 2.5em;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+.startCallAlert .content .user_name {
+  text-align: center;
+}
+.startCallAlert .content .user_name p {
+  font-weight: 600;
+  color: #00291d;
+}
+.startCallAlert .content .note {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-column-gap: 1em;
+     -moz-column-gap: 1em;
+          column-gap: 1em;
+  margin: 0.5em 0 0;
+}
+.startCallAlert .content .note p {
+  font-size: 14px;
+  color: #00291d;
+}
+.startCallAlert .content .note lord-icon {
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+.callAlert {
+  width: 215px;
+  border: 1px solid #0000003b;
+  border-radius: 1em;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  z-index: 10;
+  position: fixed;
+  -webkit-backdrop-filter: blur(3px);
+          backdrop-filter: blur(3px);
+  background-color: #0db1ca48;
+  -webkit-box-shadow: 0 4px 10px 0 #0000003b;
+          box-shadow: 0 4px 10px 0 #0000003b;
+}
+.callAlert .content {
+  display: -ms-grid;
+  display: grid;
+      grid-template-areas: "one two" "one three";
+  -ms-grid-columns: auto 0.5em 1fr;
+  grid-template-columns: auto 1fr;
+  -webkit-column-gap: 0.5em;
+     -moz-column-gap: 0.5em;
+          column-gap: 0.5em;
+  padding: 0.5em 1em 0.5em 0.5em;
+}
+.callAlert .content .user_img {
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 1;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  overflow: hidden;
+  grid-area: one;
+  margin: auto;
+}
+.callAlert .content .user_name {
+  -ms-grid-row: 1;
+  -ms-grid-column: 3;
+  grid-area: two;
+  text-align: center;
+}
+.callAlert .content .user_name p {
+  color: #00291d;
+  font-weight: 600;
+}
+.callAlert .content .controls {
+  -ms-grid-row: 2;
+  -ms-grid-column: 3;
+  grid-area: three;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+.callAlert .content .controls i {
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 50%;
+  padding: 0.2em;
+}
+.callAlert .content .controls .reject i {
+  color: #ce095f;
+  background-color: #ce095e3b;
+}
+.callAlert .content .controls .answer {
+  border-radius: 50%;
+  animation: answer 0.5s linear reverse infinite;
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+}
+.callAlert .content .controls .answer i {
+  color: #0db1ca;
+  background-color: #0db1ca3b;
+}
+@-webkit-keyframes answer {
+  100% {
+    -webkit-box-shadow: 0 0 10px 0 #0db1ca;
+            box-shadow: 0 0 10px 0 #0db1ca;
+  }
+}
+@keyframes answer {
+  100% {
+    -webkit-box-shadow: 0 0 10px 0 #0db1ca;
+            box-shadow: 0 0 10px 0 #0db1ca;
+  }
 }
 
 @media (min-width: 650px) {
@@ -775,9 +994,14 @@
     grid-auto-columns: 1fr;
   }
   .main .profile {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 2;
+    -ms-grid-column: 1;
     grid-area: one;
   }
   .main .content {
+    -ms-grid-row: 2;
+    -ms-grid-column: 3;
     grid-area: three;
   }
   .main .content.v_mob_state {
@@ -813,6 +1037,8 @@
     display: unset;
   }
   .main .messages {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
     display: block;
     grid-area: two;
     display: -ms-grid;
@@ -851,6 +1077,16 @@
   .main .messages .chatContainer .chat .containerOfChat .chatView {
     height: calc(100vh - 84px);
   }
+  .main > .user_name {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+  }
+  .main > .controls {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+  }
 }
 @media (min-width: 1100px) {
   .main {
@@ -875,6 +1111,8 @@
     border: 1px solid #fff;
   }
   .main .content > .controllers > :first-child {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
     grid-area: two;
     position: absolute;
     bottom: 0;
@@ -885,6 +1123,9 @@
     bottom: calc(100% - 87px);
   }
   .main .content > .controllers > :last-child {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 2;
+    -ms-grid-column: 1;
     grid-area: one;
   }
   .main .content .friends {
@@ -902,6 +1143,8 @@
     transition: height 0.3s linear, top 0.3s linear;
   }
   .main .content .friends > :first-child {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
     grid-area: two;
     position: absolute;
     height: calc(100% - 89px);
@@ -919,6 +1162,9 @@
     top: 87.2px;
   }
   .main .content .friends > :last-child {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 2;
+    -ms-grid-column: 1;
     grid-area: one;
   }
   .main .content .friends .friendList {
@@ -934,20 +1180,52 @@
   .main .content .friends .hide {
     height: 0;
   }
-  .main .profile {
+  .main .content > .controllers > .user_img {
     -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
     -ms-grid-column: 1;
   }
-  .main .content .friends > .profile {
+  .main .content .friends > .user_img {
     -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
     -ms-grid-column: 1;
   }
-  .main .content {
+  .main > .user_name {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+  }
+  .main .content > .controllers > .user_name {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 1;
+  }
+  .main .content .friends > .user_name {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 1;
+  }
+  .main > .controls {
     -ms-grid-row: 1;
     -ms-grid-column: 3;
     -ms-grid-column-span: 1;
   }
-  .main .messages {
+  .main .content > .controllers > .profile {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
+    -ms-grid-column: 1;
+  }
+  .main .content .friends > .profile {
+    -ms-grid-row: 1;
+    -ms-grid-row-span: 1;
+    -ms-grid-column: 1;
+  }
+  .main > .content {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
+    -ms-grid-column-span: 1;
+  }
+  .main > .messages {
     -ms-grid-row: 1;
     -ms-grid-column: 1;
     -ms-grid-column-span: 2;
@@ -969,100 +1247,106 @@
     grid-auto-columns: 289px 1fr 330px;
   }
   .main .messages {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
     grid-area: two;
     max-height: 100%;
   }
-  .main .messages .mes .friend {
-    padding-right: 10px;
-  }
-}
-@media (min-width: 1100px) {
-  .main .content > .controllers > :first-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  @media (min-width: 1100px) {
+  .main > :first-child {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
   .main .content > .controllers > :first-child {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
   }
   .main .content .friends > :first-child {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
   }
   .main .content > .controllers > :last-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
+      -ms-grid-row: 1;
+      -ms-grid-row-span: 1;
+      -ms-grid-column: 1;
   }
   .main .content .friends > :last-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
+      -ms-grid-row: 1;
+      -ms-grid-row-span: 1;
+      -ms-grid-column: 1;
   }
-  .main .content .friends > :first-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  .main > :first-child {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
   .main .content > .controllers > :first-child {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
   }
   .main .content .friends > :first-child {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
+  }
+  .main .content > .controllers > :last-child {
+      -ms-grid-row: 1;
+      -ms-grid-row-span: 1;
+      -ms-grid-column: 1;
   }
   .main .content .friends > :last-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
+      -ms-grid-row: 1;
+      -ms-grid-row-span: 1;
+      -ms-grid-column: 1;
   }
-  .main .content .friends > :last-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-  }
-  .main .messages {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  .main > .messages {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
   .main .content > .controllers > .messages {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
   }
   .main .content .friends > .messages {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 1;
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 1;
   }
-}
-@media (min-width: 650px) {
-  .main .content {
-    -ms-grid-row: 2;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
   }
-  .main .messages {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  @media (min-width: 650px) {
+  .main > .content {
+      -ms-grid-row: 2;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
-  .main .content > .controllers > :first-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  .main > .messages {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
-  .main .content .friends > :first-child {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  .main > :first-child {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
   }
-  .main .messages {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    -ms-grid-column-span: 2;
+  .main > :first-child {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
+  }
+  .main > .messages {
+      -ms-grid-row: 1;
+      -ms-grid-column: 1;
+      -ms-grid-column-span: 2;
+  }
+  }
+  .main .messages .mes .friend {
+    padding-right: 10px;
   }
 }

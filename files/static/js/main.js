@@ -564,120 +564,275 @@ server.on("reqCanceled", ids => {
 // call audio/video
 let peer = new Peer();
 let myPeerId = null;
-let videoCallBtn = document.querySelector(".bxs-video");
+let friendId;
+let videoCallBtn = document.getElementById("videoCall");
+let audioCallBtn = document.getElementById("audioCall");
 let videoBox = document.querySelector(".videoCallContainer");
+let audioView = document.querySelector(".audioView");
+let videoStreamControls = document.querySelector(".videoStreamControls");
 let streamBox = document.querySelector(".stream");
 let you = document.getElementById("you");
 let me = document.getElementById("me");
-let closeCall;
+let herAudio = document.getElementById("herAudio");
+let endCall;
 let peers = {};
+let mediaDevices;
+let chatId = null;
 
+// init call
 peer.on("open", (id) => {
   myPeerId = id;
 });
 
-let chatId = null;
-videoCallBtn.onclick = function () {
-  let friendId = document.querySelector(".receiver .name h4").id;
+function sendCall(audio, video, callType) {
+  friendId = document.querySelector(".receiver .name h4").id;
   chatId = document.querySelector(".receiver .name h4").dataset.chatid;
-  server.emit("reqPeerId", { friendId, myID, chatId });
+  mediaDevices = navigator.mediaDevices.getUserMedia({
+    audio: audio,
+    video: video,
+  });
+
+  let friImg = document.querySelector(".receiver .details .img img").src;
+  let friName = document.querySelector(".receiver .details .name h4").textContent;
+
+  server.emit("reqPeerId", { friendId, myID, chatId, myName: myData.myfullname, myImg: myData.myImg, callType });
+  startCallAlert(friImg, friName);
 }
 
+// user that send video call
+videoCallBtn.onclick = function () {
+  sendCall(true, true, "bxs-video");
+}
+
+// user stat send audio call
+audioCallBtn.onclick = function () {
+  sendCall(true, false, "bxs-phone-call");
+}
+
+// show alert and accept or reject
+// accept call  
+function acceptCall (audio, video, id) {
+  server.emit("sendPeerId", { myPeerId, chatId: id });
+  mediaDevices = navigator.mediaDevices.getUserMedia({
+    audio: audio,
+    video: video,
+  });
+}
+// reject call 
+function rejectCall (userId) {
+  server.emit("rejectCall", {userId});
+  document.querySelector(".callAlert").remove()
+}
+
+// user that receive call
 server.on("needPeerId", (data) => {
-  server.emit("sendPeerId", { myPeerId, chatId: data.chatId});
+  creatAlertCall(data.myImg, data.myName, data.callType);
+  document.getElementById(data.callType).addEventListener("click", ()=> {
+    if (data.callType == "bxs-video") {
+      acceptCall(true, true, data.chatId);
+    } else {
+      acceptCall(true, false, data.chatId);
+    }
+    document.querySelector(".callAlert").remove();
+  });
+  document.querySelector(".reject .bxs-phone-off").addEventListener("click", () => {
+    rejectCall(data.myId);
+  });
 });
 
 // start calling
 server.on("takePeerId", id => {
-  navigator.mediaDevices.getUserMedia({
-    audio:true, 
-    video: true,
-  }).then(stream => {
+  if (document.querySelector(".startCallAlert")) {
+    document.querySelector(".startCallAlert").remove();
+  }
+  mediaDevices.then(stream => {
     videoBox.style.display = "block";
-    me.srcObject = stream;
-    me.muted = true
-    me.play();
+    const myStream = stream;
+    if (myStream.getTracks().length == 1 && myStream.getTracks()[0].kind == "audio") {
+      // audio call
+      initView("grid", "none");
+      startStream(id, myStream, herAudio);
+    } else {
+      // video call
+      initView("none", "block");
+      me.srcObject = myStream;
+      me.muted = true;
+      startStream(id, myStream, you);
+    }
 
-    let call = peer.call(id, stream);
-    call.on("stream", userStream => {
-      you.srcObject = userStream;
-      you.play();
-    });
-    peers[id] = call;
     server.on("user-disconnected", () => {
       peers[id].close();
-      videoBox.style.display = "none";
-      stream.getTracks().forEach(function (track) {
+      myStream.getTracks().forEach(function (track) {
         track.stop();
       });
+      restVideo(me, you);
+      videoBox.style.display = "none";
     });
     
-    closeCall = function () {
-      stream.getTracks().forEach(function (track) {
+    endCall = function () {
+      peers[id].close();
+      myStream.getTracks().forEach(function (track) {
         track.stop();
       });
       server.emit("closeCall");
+      restVideo(me, you);
       videoBox.style.display = "none";
-      
-    }
+    };
 
   }).catch(err => {
     console.log(err)
+    alert("cant't access to your camera/mic");
   })
+});
+
+function initView(audio, video) {
+  audioView.style.display = audio;
+  videoStreamControls.style.display = video;
+  me.style.display = video;
+  you.style.display = video;
+}
+function startStream(id, stream, media) {
+  let call = peer.call(id, stream);
+  call.on("stream", (userStream) => {
+    media.srcObject = userStream;
+  });
+  peers[id] = call
+}
+
+//reject call 
+server.on("callRejected", () => {
+  mediaDevices.then((stream) => {
+    stream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+  });
+  document.querySelector(".startCallAlert .note").innerHTML = `<p style="color:#ce095f;">sorry! can't call</P>`;
+  setTimeout(() => {
+    document.querySelector(".startCallAlert").remove()
+  }, 1000);
 });
 
 // answer call
 peer.on("call", (receiveCall) => {
-  navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true,
-  }).then(stream => {
+  mediaDevices.then((stream) => {
     videoBox.style.display = "block";
-    me.srcObject = stream;
-    me.muted = true
-    me.play();
 
     receiveCall.answer(stream);
-    receiveCall.on("stream", userStream => {
-      you.srcObject = userStream;
-      you.addEventListener("loadedmetadata", ()=> {
-        you.play();
-      });
+    receiveCall.on("stream", (userStream) => {
+      const comingStream = userStream;
+      if (stream.getTracks().length == 1 && stream.getTracks()[0].kind == "audio") {
+        herAudio.srcObject = comingStream;
+      } else {
+        me.srcObject = stream;
+        me.muted = true;
+
+        you.srcObject = comingStream;
+        you.addEventListener("loadedmetadata", () => {
+          you.play();
+        });
+
+      }
     });
 
     server.on("me-disconnected", () => {
-      videoBox.style.display = "none";
+      receiveCall.close();
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
+      restVideo(me, you);
+      videoBox.style.display = "none";
     });
 
-    closeCall = function () {
+    endCall = function () {
+      receiveCall.close();
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
       server.emit("closeCall");
+      restVideo(me, you);
       videoBox.style.display = "none";
-      
     };
-    
-  })
+  }); 
 });
 
+function restVideo (me, you) {
+  me.srcObject = null;
+  you.srcObject = null;
+}
 
+//create start alert call 
+function startCallAlert(userImg, userName) {
+  let startCallAlert = document.createElement("div");
+  startCallAlert.className = "startCallAlert";
 
-// function creatVideo(stream, style, id) {
-//   let video = document.createElement("video");
-//   video.srcObject = stream;
-//   video.className = style;
-//   video.id = id;
-//   video.setAttribute("onclick", "toggle(this)");
-//   streamBox.append(video);
-//   video.addEventListener("loadedmetadata", ()=> {
-//     video.play();
-//     video.muted;
-//   });
-// }
+  let content = document.createElement("div");
+  content.className = "content";
+
+  let user_img = document.createElement("div");
+  user_img.className = "user_img";
+  let img = document.createElement("img");
+  img.src = userImg;
+  user_img.append(img);
+
+  let user_name = document.createElement("div");
+  user_name.className = "user_name";
+  let name = document.createElement("p");
+  name.textContent = userName;
+  user_name.append(name);
+
+  let note = document.createElement("div");
+  note.className = "note"
+  let p = document.createElement("p");
+  p.textContent = "start calling...";
+  let callStartIcon = document.createElement("lord-icon");
+  callStartIcon.setAttribute("trigger", "loop");
+  callStartIcon.setAttribute("src", "https://cdn.lordicon.com/tclnsjgx.json");
+
+  note.append(p, callStartIcon);
+  content.append(user_img, user_name, note);
+  startCallAlert.append(content);
+  document.body.append(startCallAlert);
+}
+
+// creat alert call
+function creatAlertCall (userImg, userName, type) {
+  let alertCall = document.createElement("div");
+  alertCall.className = "callAlert";
+  let content = document.createElement("div");
+  content.className = "content"
+  let user_img = document.createElement("div");
+  user_img.className = "user_img";
+  let img = document.createElement("img");
+  img.src = userImg;
+  user_img.append(img);
+
+  let user_name = document.createElement("div");
+  user_name.className = "user_name";
+  let p = document.createElement("p");
+  p.textContent = userName;
+  user_name.append(p);
+
+  let controls = document.createElement("div");
+  controls.className = "controls";
+  let reject = document.createElement("div");
+  reject.className = "reject";
+  let rejectIcon = document.createElement("i");
+  rejectIcon.className = "bx bxs-phone-off bx-rotate-180";
+  reject.append(rejectIcon)
+
+  let answer = document.createElement("div");
+  answer.className = "answer"
+  let answerIcon = document.createElement("i");
+  answerIcon.className = "bx "+type;
+  answerIcon.id = type;
+  answer.append(answerIcon);
+
+  controls.append(reject, answer);
+  content.append(user_img, user_name, controls);
+  alertCall.append(content);
+
+  document.body.append(alertCall)
+}
 
 function toggle(ele) {
   if (ele.classList.contains("main")) {
@@ -694,6 +849,3 @@ function toggle(ele) {
     ele.nextElementSibling.classList.remove("main");
   }
 }
-
-
-

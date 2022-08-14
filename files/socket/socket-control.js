@@ -20,25 +20,32 @@ module.exports = (socket, client) => {
   //start call
   client.on("reqPeerId", (data) => {
     client.join(data.chatId)
-    socket.to(data.friendId).emit("needPeerId",{chatId: data.chatId});
-
+    socket.to(data.friendId).emit("needPeerId",{chatId: data.chatId, myId: data.myID, myImg: data.myImg, myName: data.myName, callType: data.callType});
+    
     client.on("disconnect", ()=> {
       socket.to(data.chatId).emit("me-disconnected");
+      client.leave(data.chatId);
     });
     client.on("closeCall", ()=> {
       socket.to(data.chatId).emit("me-disconnected");
+      client.leave(data.chatId);
     });
+  });
+  // reject call
+  client.on("rejectCall", (data) => {
+    socket.to(data.userId).emit("callRejected");
   });
   // answer call
   client.on("sendPeerId", (data) => {
     client.join(data.chatId)
     socket.to(data.chatId).emit("takePeerId", data.myPeerId);
-
     client.on("disconnect", ()=> {
       socket.to(data.chatId).emit("user-disconnected");
+      client.leave(data.chatId);
     });
     client.on("closeCall", () => {
       socket.to(data.chatId).emit("user-disconnected");
+      client.leave(data.chatId);
     });
   });
 };

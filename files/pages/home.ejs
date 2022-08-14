@@ -152,8 +152,8 @@
               </div>
               <div class="options">
                 <div class="call">
-                  <i class='bx bxs-phone-call'></i>
-                  <i class='bx bxs-video'></i>
+                  <i class='bx bxs-phone-call' id="audioCall"></i>
+                  <i class='bx bxs-video' id="videoCall"></i>
                 </div>
                 <div class="opt">
                   <i class='bx bx-dots-vertical-rounded'></i>
@@ -190,14 +190,40 @@
   <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
   <%- include("./basics/menu") %>
   <div class="videoCallContainer">
-    <div class="closeVideo" onclick="closeCall()">
-      <i class='bx bx-exit-fullscreen'></i>
-    </div>
     <div class="stream">
-      <video id="you" onclick="toggle(this)" class="main"></video>
-      <video id="me" onclick="toggle(this)" class="small" muted="true"></video>
+      <div class="videoStreamControls">
+        <i class='bx bxs-phone-off' id="endCall" onclick="endCall()"></i>
+        <i class='bx bx-microphone-off'></i>
+      </div>
+      <video id="you" onclick="toggle(this)" class="main" autoplay></video>
+      <video id="me" onclick="toggle(this)" class="small" muted autoplay></video>
+
+      <div class="audioView">
+        <div class="fri-details">
+          <div class="img">
+            <img src="/uploads/1656175221036_1642093265576.jpg">
+          </div>
+          <div class="name">
+            <p>Jhone alie</p>
+          </div>
+        </div>
+        <div class="audioEffect">
+          <!-- <lord-icon src="https://cdn.lordicon.com/kvsszuvz.json" trigger="loop" style="width:250px;height:250px">
+          </lord-icon> -->
+          <lord-icon src="https://cdn.lordicon.com/fpipqhrr.json" trigger="loop" style="width:250px;height:250px">
+          </lord-icon>
+        </div>
+        <div class="audioControls">
+          <i class='bx bxs-phone bx-rotate-180' id="closeAudioCall" onclick="endCall()"></i>
+          <i class='bx bxs-volume-mute' id="muteAudio"></i>
+          <i class='bx bxs-chat' id="getChat"></i>
+        </div>
+        <audio autoplay id="herAudio"></audio>
+      </div>
     </div>
   </div>
+
+  
   <script src="js/main.js"></script>
 </body>
 </html>
