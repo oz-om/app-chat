@@ -4,13 +4,19 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const fs = require("fs")
-const https = require("https");
-const opt = {
-  key: fs.readFileSync("cert/key.pem"),
-  cert: fs.readFileSync("cert/cert.pem"),
-};
-const server = https.createServer(opt, app);
+// https sitting
+// const fs = require("fs")
+// const https = require("https");
+// const opt = {
+//   key: fs.readFileSync("cert/key.pem"),
+//   cert: fs.readFileSync("cert/cert.pem"),
+// };
+// const server = https.createServer(opt, app);
+
+// http sitting 
+const http = require("http");
+const server = http.createServer(app);
+
 const socketIo = require("socket.io");
 const socket = socketIo(server);
 socket.on("connection", (client) => {
