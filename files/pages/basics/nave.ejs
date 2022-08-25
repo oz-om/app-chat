@@ -22,14 +22,14 @@
               <div class="details" onclick="openNotif(this)">
                 <h4><a href="/profile/<%= notif.from._id %>"><%= notif.from.fname %> <%= notif.from.lname %> <%= notif.text%></a></h4>
                 <div class="time">
-                  <% if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 * 7 * 30 ) > 1 ) { %>
-                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24 * 7 * 30)) %>m ago
-                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 * 7 ) > 1 ) { %>
-                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24 * 7 ) ) %> ago
-                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 * 24 ) > 1 ) { %>
-                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 * 24  ) ) %>d ago
-                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 * 60 ) > 1 ) { %>
-                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 * 60 ) ) %>h ago
+                  <% if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 3600 * 5040 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 3600 * 5040)) %>month ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 3600 * 168) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 3600 * 168) ) %> week ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 3600 * 24 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 3600* 24 ) ) %>d ago
+                  <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 3600 ) > 1 ) { %>
+                    <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 3600 ) ) %>h ago
                   <% } else if ( (new Date().getTime() - new Date(notif.id).getTime() ) / (1000 * 60 ) > 1 ) { %>
                     <%= Math.floor((new Date().getTime() - new Date(notif.id).getTime()) / (1000 * 60 ) ) %>min ago
                   <% } else { %>

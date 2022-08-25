@@ -43,8 +43,6 @@ function creatChat(ele, sender, myId, content, msgTime) {
   msg.scrollIntoView();
 }
 // end received msg
-
-let ID = document.querySelector(".bottomMenu .control .partTwo h4 a").id;
 let chatContent = document.querySelector(".chatContent");
 // get messages
 function getMsg(ele) {
@@ -83,7 +81,7 @@ function getMsg(ele) {
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ chatId: ele.parentElement.id, myId: ID }),
+      body: JSON.stringify({ chatId: ele.parentElement.id, myId: myData.myId }),
       signal: signal,
     });
     request = null;
@@ -91,7 +89,7 @@ function getMsg(ele) {
     if (res.res) {
       chatContent.innerHTML = "";
       for (const message of res.messages) {
-        creatChat(chatContent, message.sender, ID, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
+        creatChat(chatContent, message.sender, myData.myId, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
       }
     }
   }
@@ -119,7 +117,7 @@ window.onload =  function () {
           headers: {
             "Content-type": "application/json",
           },
-          body: JSON.stringify({ chatId: opend.id, myId: ID }),
+          body: JSON.stringify({ chatId: opend.id, myId: myData.myId }),
         };
         let req = await fetch("/getMsg", opt);
         let res = await req.json();
@@ -132,7 +130,7 @@ window.onload =  function () {
         
         if (res.res) {
           for (const message of res.messages) {
-            creatChat(chatContent, message.sender, ID, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
+            creatChat(chatContent, message.sender, myData.myId, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
           }
         }
       }
@@ -176,7 +174,7 @@ async function sendMsg(ele) {
   let res = await req.json();
   if (res.res) {
     ele.previousElementSibling.value='';
-    creatChat(chatContent,ID,ID,msg.msg.content,`${new Date(msg.msg.time).getHours()}:${new Date(msg.msg.time).getMinutes()}`);
+    creatChat(chatContent,myData.myId,myData.myId,msg.msg.content,`${new Date(msg.msg.time).getHours()}:${new Date(msg.msg.time).getMinutes()}`);
     server.emit("sendMsg", msg);
     console.log("send msg success")
     recentMsg(msg.msg.content, msg.msg.receiver, msg.msg.sender, null);
@@ -254,7 +252,7 @@ function recentMsg(msg, receiver, sender, style) {
       fri.style.order = "1";
       fri.classList.add(style);
       // check if this msg sended from me to add "you" key inside msg
-      if (sender === ID) {
+      if (sender === myData.myId) {
         fri.querySelector(".info .contact span").innerHTML = `<small>you:</small> ${msg}`;
       } else {
         // if msg doesn't sended from me than make counter inside msg on receiver side
@@ -391,7 +389,7 @@ async function accept(ele) {
     friendImg: ele.dataset.img,
     FriendFullname: ele.dataset.fullname,
     myFullname: myData.myfullname,
-    myID: ID,
+    myID: myData.myId,
     myName: document.querySelector(".bottomMenu .control .partTwo h4 a").textContent,
     myImg: document.querySelector(".bottomMenu .control .partTwo .userAva img").src,
     time: new Date().getTime(),
@@ -485,7 +483,7 @@ async function reject(ele) {
   let copy = ele.firstChild;
   ele.textContent = "";
   loading(ele, "#fff");
-  let data = { friendID: ele.dataset.id, myID: ID};
+  let data = { friendID: ele.dataset.id, myID: myData.myId};
   let opt = {
     method: "POST",
     headers: {
@@ -587,7 +585,9 @@ let peer = new Peer()
 , endCall
 , peers = {}
 , mediaDevices
-, chatId = null;
+, chatId = null
+, peerInfo = {};
+
 
 // init call
 peer.on("open", (id) => {
@@ -605,19 +605,21 @@ audioCallBtn.onclick = function () {
 }
 
 function sendCall(audio, video, callType) {
-  friendId = document.querySelector(".receiver .name h4").id;
-  chatId = document.querySelector(".receiver .name h4").dataset.chatid;
+  peerInfo = {
+    friendId : document.querySelector(".receiver .name h4").id,
+    friImg : document.querySelector(".receiver .details .img img").src,
+    friName : document.querySelector(".receiver .details .name h4").textContent,
+    chatId : document.querySelector(".receiver .name h4").dataset.chatid,
+  };
 
   mediaDevices = navigator.mediaDevices.getUserMedia({
     audio: audio,
     video: video,
   });
 
-  server.emit("reqPeerId", { friendId, myID, chatId, myName: myData.myfullname, myImg: myData.myImg, callType });
+  server.emit("reqPeerId", { friendId: peerInfo.friendId, myID: myData.myId, chatId, myName: myData.myfullname, myImg: myData.myImg, callType });
 
-  let friImg = document.querySelector(".receiver .details .img img").src;
-  let friName = document.querySelector(".receiver .details .name h4").textContent;
-  startCallAlert(friImg, friName);
+  startCallAlert(peerInfo.friImg, peerInfo.friName);
 }
 
 function cancelCall() {
@@ -635,6 +637,12 @@ server.on("needPeerId", (data) => {
       acceptCall(true, true, data.chatId);
     } else {
       acceptCall(true, false, data.chatId);
+      peerInfo = {
+        callerName: data.myName,
+        callerImg: data.myImg,
+        callerId: data.myId,
+        chatId: data.chatId,
+      };
     }
     document.querySelector(".callAlert").remove();
   });
@@ -673,6 +681,7 @@ server.on("takePeerId", id => {
       // audio call
       initView("grid", "none");
       startStream(id, myStream, herAudio);
+      initPeerInfo(peerInfo.friImg, peerInfo.friName, peerInfo.friendId, peerInfo.chatId);
     } else {
       // video call
       initView("none", "block");
@@ -712,6 +721,13 @@ function initView(audio, video) {
   me.style.display = video;
   you.style.display = video;
 }
+function initPeerInfo(img, name, userId, chatId){
+  let fri_details = document.querySelector(".audioView .fri-details");
+  fri_details.id = userId;
+  fri_details.setAttribute("data-chatid", chatId)
+  document.querySelector(".audioView .img img").src = img;
+  document.querySelector(".audioView .name p").textContent = name;
+}
 function startStream(id, stream, media) {
   let userSTR;
   let call = peer.call(id, stream);
@@ -745,6 +761,7 @@ peer.on("call", (receiveCall) => {
       if (stream.getTracks().length == 1 && stream.getTracks()[0].kind == "audio") {
         herAudio.srcObject = comingStream;
         initView("grid", "none");
+        initPeerInfo(peerInfo.callerImg, peerInfo.callerName, peerInfo.callerId, peerInfo.chatId);
       } else {
         initView("none", "block")
         me.srcObject = stream;
