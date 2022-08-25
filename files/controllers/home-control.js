@@ -1,5 +1,5 @@
 const profileModel = require("../models/profile.model");
-const getChat = require("../models/message-model").getChat;
+const getChat = require("../models/chat-model").getChat;
 const getNotif = require("../models/notif_model").getNotif;
 
 exports.home = (req,res) => {
@@ -9,23 +9,17 @@ exports.home = (req,res) => {
       getChat(arr[1]),
       getNotif(id)
     ]).then(([chat, notif]) => {
-        let filterChat = chat.filter((ch) => {
-          if (ch) {
-            return ch;
+      // for sort message 
+        for (let i = 0; i < chat.length -1; i++) {
+          let start = i;
+          let first = new Date(chat[start].chat.time).getTime();
+          let second = new Date(chat[i + 1].chat.time).getTime();
+          let copy = chat[i + 1];
+          while (start >= 0 &&  first < second) {
+            chat[start + 1] = chat[start];
+            start = start - 1;
           }
-        });
-        let Box;
-        for (let i = 0; i < filterChat.length; i++) {
-          for (let n = 0; n < filterChat.length - 1; n++) {
-            if (
-              new Date(filterChat[n].time).getTime() >
-              new Date(filterChat[n + 1].time).getTime()
-            ) {
-              Box = filterChat[n];
-              filterChat[n] = filterChat[n + 1];
-              filterChat[n + 1] = Box;
-            };
-          };
+          chat[start + 1] = copy;
         };
 
         res.render("home", {
@@ -34,7 +28,7 @@ exports.home = (req,res) => {
           my: arr[0],
           friReq: arr[0].friReq.reverse(),
           friends: arr[0].friends.reverse(),
-          chat: filterChat.reverse(),
+          chat: chat,
           notifications: notif.notifications.reverse()
         });
     }).catch(err => {

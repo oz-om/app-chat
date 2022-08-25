@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-// https sitting
+// for dev
 // const fs = require("fs")
 // const https = require("https");
 // const opt = {
@@ -13,7 +13,7 @@ app.use(express.json());
 // };
 // const server = https.createServer(opt, app);
 
-// http sitting 
+// for production
 const http = require("http");
 const server = http.createServer(app);
 

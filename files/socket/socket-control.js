@@ -23,13 +23,20 @@ module.exports = (socket, client) => {
     socket.to(data.friendId).emit("needPeerId",{chatId: data.chatId, myId: data.myID, myImg: data.myImg, myName: data.myName, callType: data.callType});
     
     client.on("disconnect", ()=> {
+      // run when we are during a call
       socket.to(data.chatId).emit("me-disconnected");
+      // will run when sender cancel call
+      socket.to(data.friendId).emit("callCanceled");
       client.leave(data.chatId);
     });
     client.on("closeCall", ()=> {
       socket.to(data.chatId).emit("me-disconnected");
       client.leave(data.chatId);
     });
+    client.on("cancelCall", () => {
+      socket.to(data.friendId).emit("callCanceled");
+    });
+
   });
   // reject call
   client.on("rejectCall", (data) => {
@@ -37,9 +44,9 @@ module.exports = (socket, client) => {
   });
   // answer call
   client.on("sendPeerId", (data) => {
-    client.join(data.chatId)
-    socket.to(data.chatId).emit("takePeerId", data.myPeerId);
-    client.on("disconnect", ()=> {
+    client.join(data.chatId);
+    client.broadcast.to(data.chatId).emit("takePeerId", data.myPeerId);
+    client.on("disconnect", () => {
       socket.to(data.chatId).emit("user-disconnected");
       client.leave(data.chatId);
     });

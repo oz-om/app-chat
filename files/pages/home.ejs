@@ -84,15 +84,15 @@
         </div>
         <div class="mes">
           <% for (let fri of chat) { %>
-              <% if (`${fri.sender._id}` === `${my._id}`) { %>
+              <% if (`${fri.chat.sender._id}` === `${my._id}`) { %>
                 <div class="friend" id="<%= fri.chatId%>">
                   <div class="img-container" onclick="getMsg(this)">
-                    <img src="<%= fri.receiver.imgProfile %>" alt="ava">
+                    <img src="<%= fri.chat.receiver.imgProfile %>" alt="ava">
                   </div>
                   <div class="info" onclick="getMsg(this)">
                     <div class="contact">
-                      <h3 id="<%= fri.receiver._id %>"><%= fri.receiver.fname %> <%= fri.receiver.lname %></h3>
-                      <span class="lastMsg"><small>you: </small> <%= fri.content %></span>
+                      <h3 id="<%= fri.chat.receiver._id %>"><%= fri.chat.receiver.fname %> <%= fri.chat.receiver.lname %></h3>
+                      <span class="lastMsg"><small>you: </small> <%= fri.chat.content %></span>
                     </div>
                   </div>
                   <div class="options">
@@ -105,14 +105,14 @@
                   </div>
                 </div>
               <% } else { %>
-                <div class="friend <%= fri.status.split("_")[0] %>" id="<%= fri.chatId %>">
+                <div class="friend <%= fri.chat.status.split("_")[0] %>" id="<%= fri.chatId %>">
                   <div class="img-container" onclick="getMsg(this)">
-                    <img src="<%= fri.sender.imgProfile %>" alt="ava">
+                    <img src="<%= fri.chat.sender.imgProfile %>" alt="ava">
                   </div>
                   <div class="info" onclick="getMsg(this)">
                     <div class="contact">
-                      <h3 id="<%= fri.sender._id %>"><%= fri.sender.fname %> <%= fri.sender.lname %></h3>
-                      <span class="lastMsg"><%= fri.content %> <span class="count"><%= Number(fri.status.split("_")[1]) > 0 ? fri.status.split("_")[1] : ""%></span></span>
+                      <h3 id="<%= fri.chat.sender._id %>"><%= fri.chat.sender.fname %> <%= fri.chat.sender.lname %></h3>
+                      <span class="lastMsg"><%= fri.chat.content %> <span class="count"><%= Number(fri.chat.status.split("_")[1]) > 0 ? fri.chat.status.split("_")[1] : ""%></span></span>
                     </div>
                   </div>
                   <div class="options">
@@ -191,13 +191,16 @@
   <%- include("./basics/menu") %>
   <div class="videoCallContainer">
     <div class="stream">
-      <div class="videoStreamControls">
-        <i class='bx bxs-phone-off' id="endCall" onclick="endCall()"></i>
-        <i class='bx bx-microphone-off'></i>
+      <div class="videoView">
+        <div class="videoStreamControls">
+          <i class='bx bxs-phone-off' id="endCall" onclick="endCall()"></i>
+          <i class='bx bxs-microphone' id="micBtn"></i>
+        </div>
+        <div class="peers">
+          <video id="you" onclick="toggle(this)" class="main" autoplay></video>
+          <video id="me" onclick="toggle(this)" class="small" muted autoplay></video>
+        </div>
       </div>
-      <video id="you" onclick="toggle(this)" class="main" autoplay></video>
-      <video id="me" onclick="toggle(this)" class="small" muted autoplay></video>
-
       <div class="audioView">
         <div class="fri-details">
           <div class="img">
@@ -208,14 +211,12 @@
           </div>
         </div>
         <div class="audioEffect">
-          <!-- <lord-icon src="https://cdn.lordicon.com/kvsszuvz.json" trigger="loop" style="width:250px;height:250px">
-          </lord-icon> -->
           <lord-icon src="https://cdn.lordicon.com/fpipqhrr.json" trigger="loop" style="width:250px;height:250px">
           </lord-icon>
         </div>
         <div class="audioControls">
           <i class='bx bxs-phone bx-rotate-180' id="closeAudioCall" onclick="endCall()"></i>
-          <i class='bx bxs-volume-mute' id="muteAudio"></i>
+          <i class='bx bxs-microphone' id="muteAudio"></i>
           <i class='bx bxs-chat' id="getChat"></i>
         </div>
         <audio autoplay id="herAudio"></audio>

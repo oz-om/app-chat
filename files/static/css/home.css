@@ -318,6 +318,15 @@
   height: calc(100vh - 128px);
   overflow: hidden;
   overflow-y: scroll;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 .main .messages .mesContainer .mes::-webkit-scrollbar {
   display: none;
@@ -743,7 +752,7 @@
 .videoCallContainer .stream .videoStreamControls .bxs-phone-off {
   color: #ce095f;
 }
-.videoCallContainer .stream .videoStreamControls .bx-microphone-off {
+.videoCallContainer .stream .videoStreamControls #micBtn {
   color: #0db1ca;
 }
 .videoCallContainer .stream #you {
@@ -891,6 +900,19 @@
   height: 2.5em;
   -webkit-transform: rotate(90deg);
           transform: rotate(90deg);
+}
+.startCallAlert .content .cancelCallBtn {
+  border: 1px solid #ce095f;
+  color: #9d0b4a;
+  background-color: #ce095e37;
+  padding: 0.3em 0.5em;
+  border-radius: 0.5em;
+  width: 5em;
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  margin: 0 auto;
+  cursor: pointer;
 }
 
 .callAlert {

@@ -84,6 +84,7 @@ exports.acceptReq = (data) => {
   let text = "accept your friend request";
   const newChat = new Chat({
     users: [data.myID, data.friendID],
+    messages:[]
   });
   return new Promise((resolve, reject) => {
     Promise.all([
@@ -103,8 +104,6 @@ exports.acceptReq = (data) => {
   });
 };
 
-const msgs = require("./message-model").msgModel;
-
 exports.unfriend = (data) => {
   return new Promise((resolve, reject) => {
     usersModel.findById({ _id: data.myID }).then((me) => {
@@ -114,8 +113,7 @@ exports.unfriend = (data) => {
       });
       
       Promise.all([
-        Chat.deleteOne({ _id: idOfChat[0].chatId }), 
-        msgs.deleteMany({ chatId: idOfChat[0].chatId }),
+        Chat.deleteOne({ _id: idOfChat[0].chatId }),
         usersModel.updateOne({ _id: data.myID }, { $pull: { friends: { fr: data.friendID } } }),
         usersModel.updateOne({ _id: data.friendID }, { $pull: { friends: { fr: data.myID } } })
       ]).then(() => {

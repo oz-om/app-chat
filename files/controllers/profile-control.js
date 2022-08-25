@@ -95,17 +95,17 @@ exports.unfriend = (req, res) => {
   });
 }
 
-const messageModel = require("../models/message-model");
+const chatModel = require("../models/chat-model");
 exports.getChat = (req, res)=> {
-  messageModel.getMessages(req.body.chatId, req.body.myId).then((chat) => {
-    res.json({res: true, chat});
+  chatModel.getMessages(req.body.chatId, req.body.myId).then((messages) => {
+    res.json({ res: true, messages });
   }).catch(err => {
     res.json({res:false, err})
   });
 }
 
 exports.sendMsg = (req, res) => {
-  messageModel.saveChat(req.body.msg).then(() => {
+  chatModel.saveChat(req.body).then(() => {
     res.json({ res: true });
   }).catch((err) => {
     res.json({ res: false, err: err });

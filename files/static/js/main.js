@@ -28,7 +28,7 @@ let myData = {
 let chatContainer = document.querySelector(".messages .chatContainer .chat");
 let defaultView = document.querySelector(".messages .chatContainer .defaultView");
 let messagedFriend = document.querySelectorAll(".messages .mesContainer .mes .friend");
-// create last received msg
+// create last received or sender msg
 function creatChat(ele, sender, myId, content, msgTime) {
   let msg = document.createElement("div");
   msg.className = String(sender) === String(myId) ? "msg msgRight" : "msg msgLeft";
@@ -90,8 +90,8 @@ function getMsg(ele) {
     let res = await req.json();
     if (res.res) {
       chatContent.innerHTML = "";
-      for (const chat of res.chat) {
-        creatChat(chatContent, chat.sender,ID,chat.content, `${new Date(chat.time).getHours()}:${new Date(chat.time).getMinutes()}`)
+      for (const message of res.messages) {
+        creatChat(chatContent, message.sender, ID, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
       }
     }
   }
@@ -131,8 +131,8 @@ window.onload =  function () {
         document.querySelector(".receiver .details .name h4").setAttribute("data-chatId",fri.id)
         
         if (res.res) {
-          for (const chat of res.chat) {
-            creatChat(chatContent, chat.sender,ID,chat.content, `${new Date(chat.time).getHours()}:${new Date(chat.time).getMinutes()}`)
+          for (const message of res.messages) {
+            creatChat(chatContent, message.sender, ID, message.content, `${new Date(message.time).getHours()}:${new Date(message.time).getMinutes()}`);
           }
         }
       }
@@ -144,18 +144,24 @@ window.onload =  function () {
 
 // start send msg 
 async function sendMsg(ele) {
+  let time ;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  await fetch("https://worldtimeapi.org/api/timezone/" + tz)
+    .then((response) => response.json())
+    .then((data) =>  time = data.datetime);
+
   let receiver = document.querySelector(".receiver .name h4");
   let msg = {
     myID: myData.myId,
     myName: myData.myName,
     myImg: myData.myImg,
     myfullname: myData.myfullname,
+    chatId: receiver.dataset.chatid,
     msg: {
-      chatId: receiver.dataset.chatid,
       content: ele.previousElementSibling.value,
       sender: myData.myId,
       receiver: receiver.id,
-      time: new Date(),
+      time: `${time}`,
       status: "unread",
     },
   };
@@ -220,19 +226,19 @@ server.on("receiveMsg", (msg)=> {
   console.log("receiver success")
   if (document.querySelector(".receiver .details .name h4").id == msg.msg.sender) {
     creatChat(chatContent,msg.msg.sender,msg.msg.receiver,msg.msg.content,`${new Date(msg.msg.time).getHours()}:${new Date(msg.msg.time).getMinutes()}`);
-    recentMsg(msg.msg.content, msg.msg.sender, msg.msg.receiver, null);
-    console.log("receiver success 1");
-  } else if(document.getElementById(msg.msg.chatId)) {
+    recentMsg(msg.msg.content, msg.msg.sender, msg.msg.sender, null);
+    console.log("you open sender chat");
+  } else if(document.getElementById(msg.chatId)) {
     recentMsg(msg.msg.content, msg.msg.sender, "", "unread");
-    console.log("receiver success 2");
+    console.log("sender is in list of messaged friend");
   } else {
-    console.log("receiver success 3");
+    console.log("this is a new sender send you a new message");
     document.querySelectorAll(".mesContainer .mes .friend").forEach(fri => {
       let count = 2;
       fri.style.order = count;
       count++
     })
-    recentSender(msg.msg.chatId, msg.myID, msg.myfullname, msg.myImg, msg.msg.content, "unread", 1)
+    recentSender(msg.chatId, msg.myID, msg.myfullname, msg.myImg, msg.msg.content, "unread", 1)
   }
 });
 // end receive msg
@@ -240,14 +246,18 @@ server.on("receiveMsg", (msg)=> {
 // show recent msg
 function recentMsg(msg, receiver, sender, style) {
   let counter = 2;
+
   document.querySelectorAll(".mesContainer .mes .friend").forEach((fri) => {
+
+    // looking fro user that receiver/sender msg to mak it at top
     if (fri.querySelector(".info .contact h3").id == receiver) {
       fri.style.order = "1";
       fri.classList.add(style);
-
+      // check if this msg sended from me to add "you" key inside msg
       if (sender === ID) {
         fri.querySelector(".info .contact span").innerHTML = `<small>you:</small> ${msg}`;
       } else {
+        // if msg doesn't sended from me than make counter inside msg on receiver side
         let count = fri.querySelector(".info .contact span .count");
         if (count) {
           let unreadCount = +count.textContent+1
@@ -562,42 +572,27 @@ server.on("reqCanceled", ids => {
 
 
 // call audio/video
-let peer = new Peer();
-let myPeerId = null;
-let friendId;
-let videoCallBtn = document.getElementById("videoCall");
-let audioCallBtn = document.getElementById("audioCall");
-let videoBox = document.querySelector(".videoCallContainer");
-let audioView = document.querySelector(".audioView");
-let videoStreamControls = document.querySelector(".videoStreamControls");
-let streamBox = document.querySelector(".stream");
-let you = document.getElementById("you");
-let me = document.getElementById("me");
-let herAudio = document.getElementById("herAudio");
-let endCall;
-let peers = {};
-let mediaDevices;
-let chatId = null;
+let peer = new Peer()
+, myPeerId = null
+, friendId
+, videoCallBtn = document.getElementById("videoCall")
+, audioCallBtn = document.getElementById("audioCall")
+, videoBox = document.querySelector(".videoCallContainer")
+, audioView = document.querySelector(".audioView")
+, videoStreamControls = document.querySelector(".videoStreamControls")
+, streamBox = document.querySelector(".stream")
+, you = document.getElementById("you")
+, me = document.getElementById("me")
+, herAudio = document.getElementById("herAudio")
+, endCall
+, peers = {}
+, mediaDevices
+, chatId = null;
 
 // init call
 peer.on("open", (id) => {
   myPeerId = id;
 });
-
-function sendCall(audio, video, callType) {
-  friendId = document.querySelector(".receiver .name h4").id;
-  chatId = document.querySelector(".receiver .name h4").dataset.chatid;
-  mediaDevices = navigator.mediaDevices.getUserMedia({
-    audio: audio,
-    video: video,
-  });
-
-  let friImg = document.querySelector(".receiver .details .img img").src;
-  let friName = document.querySelector(".receiver .details .name h4").textContent;
-
-  server.emit("reqPeerId", { friendId, myID, chatId, myName: myData.myfullname, myImg: myData.myImg, callType });
-  startCallAlert(friImg, friName);
-}
 
 // user that send video call
 videoCallBtn.onclick = function () {
@@ -606,8 +601,49 @@ videoCallBtn.onclick = function () {
 
 // user stat send audio call
 audioCallBtn.onclick = function () {
-  sendCall(true, false, "bxs-phone-call");
+  sendCall(true, false, "bxs-phone-call")
 }
+
+function sendCall(audio, video, callType) {
+  friendId = document.querySelector(".receiver .name h4").id;
+  chatId = document.querySelector(".receiver .name h4").dataset.chatid;
+
+  mediaDevices = navigator.mediaDevices.getUserMedia({
+    audio: audio,
+    video: video,
+  });
+
+  server.emit("reqPeerId", { friendId, myID, chatId, myName: myData.myfullname, myImg: myData.myImg, callType });
+
+  let friImg = document.querySelector(".receiver .details .img img").src;
+  let friName = document.querySelector(".receiver .details .name h4").textContent;
+  startCallAlert(friImg, friName);
+}
+
+function cancelCall() {
+  stopMediaDevices();
+  server.emit("cancelCall");
+  document.querySelector(".startCallAlert").remove();
+}
+
+// user that receive call
+server.on("needPeerId", (data) => {
+  creatAlertCall(data.myImg, data.myName, data.callType);
+  // accept call
+  document.getElementById(data.callType).addEventListener("click", ()=> {
+    if (data.callType == "bxs-video") {
+      acceptCall(true, true, data.chatId);
+    } else {
+      acceptCall(true, false, data.chatId);
+    }
+    document.querySelector(".callAlert").remove();
+  });
+
+  // reject call
+  document.querySelector(".reject .bxs-phone-off").addEventListener("click", () => {
+    rejectCall(data.myId);
+  });
+});
 
 // show alert and accept or reject
 // accept call  
@@ -624,21 +660,6 @@ function rejectCall (userId) {
   document.querySelector(".callAlert").remove()
 }
 
-// user that receive call
-server.on("needPeerId", (data) => {
-  creatAlertCall(data.myImg, data.myName, data.callType);
-  document.getElementById(data.callType).addEventListener("click", ()=> {
-    if (data.callType == "bxs-video") {
-      acceptCall(true, true, data.chatId);
-    } else {
-      acceptCall(true, false, data.chatId);
-    }
-    document.querySelector(".callAlert").remove();
-  });
-  document.querySelector(".reject .bxs-phone-off").addEventListener("click", () => {
-    rejectCall(data.myId);
-  });
-});
 
 // start calling
 server.on("takePeerId", id => {
@@ -692,37 +713,40 @@ function initView(audio, video) {
   you.style.display = video;
 }
 function startStream(id, stream, media) {
+  let userSTR;
   let call = peer.call(id, stream);
   call.on("stream", (userStream) => {
+    userSTR = userStream;
     media.srcObject = userStream;
-  });
-  peers[id] = call
-}
-
-//reject call 
-server.on("callRejected", () => {
-  mediaDevices.then((stream) => {
-    stream.getTracks().forEach(function (track) {
-      track.stop();
+    media.addEventListener("loadedmetadata", () => {
+      media.play();
     });
   });
-  document.querySelector(".startCallAlert .note").innerHTML = `<p style="color:#ce095f;">sorry! can't call</P>`;
-  setTimeout(() => {
-    document.querySelector(".startCallAlert").remove()
-  }, 1000);
-});
+  peers[id] = call;
+  // video toggle mute
+  document.getElementById("micBtn").addEventListener("click", (e) => {
+    on_off_mute(e.target, userSTR);
+  });
+  // audio toggle mute
+  document.getElementById("muteAudio").addEventListener("click", (e) => {
+    on_off_mute(e.target, userSTR);
+  });
+}
 
 // answer call
 peer.on("call", (receiveCall) => {
-  mediaDevices.then((stream) => {
+  let comingStream;
+  mediaDevices.then((stream, x) => {
     videoBox.style.display = "block";
 
     receiveCall.answer(stream);
     receiveCall.on("stream", (userStream) => {
-      const comingStream = userStream;
+      comingStream = userStream;
       if (stream.getTracks().length == 1 && stream.getTracks()[0].kind == "audio") {
         herAudio.srcObject = comingStream;
+        initView("grid", "none");
       } else {
+        initView("none", "block")
         me.srcObject = stream;
         me.muted = true;
 
@@ -730,8 +754,14 @@ peer.on("call", (receiveCall) => {
         you.addEventListener("loadedmetadata", () => {
           you.play();
         });
-
       }
+    });
+
+    document.getElementById("micBtn").addEventListener("click", (e) => {
+      on_off_mute(e.target, comingStream)
+    });
+    document.getElementById("muteAudio").addEventListener("click", (e) => {
+      on_off_mute(e.target, comingStream);
     });
 
     server.on("me-disconnected", () => {
@@ -755,12 +785,28 @@ peer.on("call", (receiveCall) => {
   }); 
 });
 
+//reject call 
+server.on("callRejected", () => {
+  stopMediaDevices();
+  document.querySelector(".startCallAlert .note").innerHTML = `<p style="color:#ce095f;">sorry! can't call</P>`;
+  setTimeout(() => {
+    document.querySelector(".startCallAlert").remove()
+  }, 1000);
+});
+
+server.on("callCanceled", ()=> {
+  if (document.querySelector(".callAlert")) {
+    document.querySelector(".callAlert").remove();
+  }
+});
+
+
 function restVideo (me, you) {
   me.srcObject = null;
   you.srcObject = null;
 }
 
-//create start alert call 
+//create start alert call (on user that start call)
 function startCallAlert(userImg, userName) {
   let startCallAlert = document.createElement("div");
   startCallAlert.className = "startCallAlert";
@@ -789,12 +835,18 @@ function startCallAlert(userImg, userName) {
   callStartIcon.setAttribute("src", "https://cdn.lordicon.com/tclnsjgx.json");
 
   note.append(p, callStartIcon);
-  content.append(user_img, user_name, note);
+
+  let cancelCallBtn = document.createElement("span");
+  cancelCallBtn.className = "cancelCallBtn";
+  cancelCallBtn.textContent = "cancel";
+  cancelCallBtn.setAttribute("onclick", "cancelCall()");
+  
+  content.append(user_img, user_name, note, cancelCallBtn);
   startCallAlert.append(content);
   document.body.append(startCallAlert);
 }
 
-// creat alert call
+// creat alert call (on user that receive call)
 function creatAlertCall (userImg, userName, type) {
   let alertCall = document.createElement("div");
   alertCall.className = "callAlert";
@@ -849,3 +901,23 @@ function toggle(ele) {
     ele.nextElementSibling.classList.remove("main");
   }
 }
+
+function stopMediaDevices() {
+  mediaDevices.then((stream) => {
+    stream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+  });
+}
+function on_off_mute(ele, userStream) {
+  if (userStream.getAudioTracks()[0].enabled == false) {
+    userStream.getAudioTracks()[0].enabled = true;
+    ele.classList.remove("bx-microphone-off");
+    ele.classList.add("bxs-microphone");
+  } else {
+    userStream.getAudioTracks()[0].enabled = false;
+    ele.classList.remove("bxs-microphone");
+    ele.classList.add("bx-microphone-off");
+  }
+}
+
