@@ -1,7 +1,7 @@
 let server = io();
 var myID = document.querySelector(".bottomMenu .partTwo h4 a").id;
-if (location.href == "http://om-chate.herokuapp.com/") {
-  location.replace("https://om-chate.herokuapp.com/");
+if (location.href == "http://om-chat.onrender.com/") {
+  location.replace("https://om-chat.onrender.com/");
 }
 
 server.on("connect", ()=> {
